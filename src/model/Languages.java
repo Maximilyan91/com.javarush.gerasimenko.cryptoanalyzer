@@ -40,6 +40,10 @@ public enum Languages {
         return AllSymbols;
     }
 
+    public int getSymbolsCapacity() {
+        return AllSymbols.length;
+    }
+
     @Override
     public String toString() {
         return "name='" + name + '\'' +
