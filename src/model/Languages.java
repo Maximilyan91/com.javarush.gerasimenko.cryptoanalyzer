@@ -1,4 +1,4 @@
-package languages;
+package model;
 
 import java.util.Arrays;
 
@@ -6,12 +6,13 @@ public enum Languages {
 
     RUS("Русский",
             new char[]{'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з',
-            'и', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т',
-            'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ',
-            'ъ', 'ы', 'ь', 'э', 'я', '.', ',', '«',
-            '»', '"', '\'', ':', '!', '?', ' '}),
+                    'и', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т',
+                    'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ',
+                    'ъ', 'ы', 'ь', 'э', 'я', '.', ',', '«',
+                    '»', '"', '\'', ':', '!', '?', ' '}),
+
     ENG("Английский (ASCII)",
-            new char[]{ 32, 33, 34, 35, 36, 37, 38, 39, 40,
+            new char[]{32, 33, 34, 35, 36, 37, 38, 39, 40,
                     41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
                     51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
                     61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
@@ -26,7 +27,7 @@ public enum Languages {
     private final String name;
     private final char[] AllSymbols;
 
-    Languages( String name, char[] allSymbols) {
+    Languages(String name, char[] allSymbols) {
         AllSymbols = allSymbols;
         this.name = name;
     }
