@@ -4,6 +4,9 @@ import model.Languages;
 import service.Cryptographer;
 import service.Validator;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CryptographerImpl implements Cryptographer {
 
     private static final Validator validator = new ValidatorImpl();
@@ -18,18 +21,44 @@ public class CryptographerImpl implements Cryptographer {
      * the number of all symbols in the language.
      */
 
-    private static int keyCorrect(Languages lang, int shift) {
+    private static int keyCorrect(Languages lang, int value) {
         int symbolsCapacity = lang.getSymbolsCapacity();
 
-        if (validator.isValidKey(lang, shift)) {
-            if (shift < -symbolsCapacity) {
-                shift %= -symbolsCapacity;
+        if (validator.isValidKey(lang, value)) {
+            if (value < -symbolsCapacity) {
+                value %= -symbolsCapacity;
             }
 
-            if (shift > symbolsCapacity) {
-                shift %= symbolsCapacity;
+            if (value > symbolsCapacity) {
+                value %= symbolsCapacity;
             }
         }
-        return shift;
+        return value;
+    }
+
+    /*
+     * Логику метода getEncryptMap решил реализовать самостоятельно,
+     * без использования утилитарных методов типа Arrays.copyOf()
+     * а также Collections.rotate()
+     */
+
+    private static Map<Character, Character> getEncryptMap(Languages lang, int shift) {
+        char[] symbols = lang.getAllSymbols();
+        Map<Character, Character> encryptMap = new HashMap<>();
+
+        if (shift < 0) {
+            shift += symbols.length;
+        }
+
+        for (int i = 0; i < symbols.length; i++) {
+            int shiftedIndex = i + shift;
+
+            if (shiftedIndex < symbols.length) {
+                encryptMap.put(symbols[i], symbols[shiftedIndex]);
+            } else {
+                encryptMap.put(symbols[i], symbols[shiftedIndex - symbols.length]);
+            }
+        }
+        return encryptMap;
     }
 }
