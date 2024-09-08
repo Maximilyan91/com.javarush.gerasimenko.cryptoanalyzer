@@ -4,17 +4,13 @@ import model.Languages;
 import service.Cryptographer;
 import service.Validator;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CryptographerImpl implements Cryptographer {
 
     private static final Validator validator = new ValidatorImpl();
-
-    public static String encrypt(Languages language, String text, int shift) {
-        //TODO разработать логику шифрования текста
-        return null;
-    }
 
     /**
      * Adjusts the array shift if the key value is greater
@@ -36,12 +32,6 @@ public class CryptographerImpl implements Cryptographer {
         return value;
     }
 
-    /*
-     * Логику метода getEncryptMap решил реализовать самостоятельно,
-     * без использования утилитарных методов типа Arrays.copyOf()
-     * а также Collections.rotate()
-     */
-
     private static Map<Character, Character> getEncryptMap(Languages lang, int shift) {
         char[] symbols = lang.getAllSymbols();
         Map<Character, Character> encryptMap = new HashMap<>();
@@ -60,5 +50,23 @@ public class CryptographerImpl implements Cryptographer {
             }
         }
         return encryptMap;
+    }
+
+    /*
+     * Логику метода getEncryptMap решил реализовать самостоятельно,
+     * без использования утилитарных методов типа Arrays.copyOf()
+     * а также Collections.rotate()
+     */
+
+    public String encrypt(Languages lang, String text, int shift) {
+        shift = keyCorrect(lang, shift);
+        char[] textArr = text.toCharArray();
+        char[] encryptedArr = new char[textArr.length];
+        Map<Character, Character> encryptionMap = getEncryptMap(lang, shift);
+
+        for (int i = 0; i < textArr.length; i++) {
+            encryptedArr[i] = encryptionMap.getOrDefault(textArr[i], '`');
+        }
+        return Arrays.toString(encryptedArr);
     }
 }
