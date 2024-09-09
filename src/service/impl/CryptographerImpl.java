@@ -58,6 +58,7 @@ public class CryptographerImpl implements Cryptographer {
         return encryptMap;
     }
 
+    @Override
     public String encrypt(Languages lang, String text, int shift) {
         shift = keyCorrect(lang, shift);
         char[] textArr = text.toCharArray();
@@ -70,6 +71,7 @@ public class CryptographerImpl implements Cryptographer {
         return Arrays.toString(encryptedArr);
     }
 
+    @Override
     public String decrypt(Languages lang, String text, int shift) {
         return encrypt(lang, text, -shift);
     }
