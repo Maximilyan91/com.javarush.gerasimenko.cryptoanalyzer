@@ -32,6 +32,12 @@ public class CryptographerImpl implements Cryptographer {
         return value;
     }
 
+    /*
+     * Логику метода getEncryptMap решил реализовать самостоятельно,
+     * без использования утилитарных методов типа Arrays.copyOf()
+     * а также Collections.rotate()
+     */
+
     private static Map<Character, Character> getEncryptMap(Languages lang, int shift) {
         char[] symbols = lang.getAllSymbols();
         Map<Character, Character> encryptMap = new HashMap<>();
@@ -52,12 +58,6 @@ public class CryptographerImpl implements Cryptographer {
         return encryptMap;
     }
 
-    /*
-     * Логику метода getEncryptMap решил реализовать самостоятельно,
-     * без использования утилитарных методов типа Arrays.copyOf()
-     * а также Collections.rotate()
-     */
-
     public String encrypt(Languages lang, String text, int shift) {
         shift = keyCorrect(lang, shift);
         char[] textArr = text.toCharArray();
@@ -68,5 +68,9 @@ public class CryptographerImpl implements Cryptographer {
             encryptedArr[i] = encryptionMap.getOrDefault(textArr[i], '`');
         }
         return Arrays.toString(encryptedArr);
+    }
+
+    public String decrypt(Languages lang, String text, int shift) {
+        return encrypt(lang, text, -shift);
     }
 }
