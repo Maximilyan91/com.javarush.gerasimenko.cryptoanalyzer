@@ -12,8 +12,8 @@ public class CryptoUtils {
     private static final Validator validator = new ValidatorImpl();
 
     /**
-     * Adjusts the array shift if the key value is greater
-     * the number of all symbols in the language.
+     * Регулирует сдвиг массива,
+     * если значение ключа больше чем кол-во символов в языке.
      */
 
     public static int keyCorrect(Languages lang, int value) {
