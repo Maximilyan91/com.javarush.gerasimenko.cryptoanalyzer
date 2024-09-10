@@ -12,7 +12,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String readFile(String pathName) {
-        String text = "";
+        String text;
         try {
             text = Files.readString(Path.of(pathName));
         } catch (IOException e) {
