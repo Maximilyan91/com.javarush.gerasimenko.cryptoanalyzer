@@ -18,13 +18,14 @@ public class CryptographerImpl implements Cryptographer {
     public String encrypt(Languages lang, String text, int shift) {
         shift = CryptoUtils.keyCorrect(lang, shift);
         char[] textArr = text.toCharArray();
-        char[] encryptedArr = new char[textArr.length];
         Map<Character, Character> encryptionMap = CryptoUtils.getEncryptMap(lang, shift);
+        StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < textArr.length; i++) {
-            encryptedArr[i] = encryptionMap.getOrDefault(textArr[i], '`');
+            builder.append(encryptionMap.getOrDefault(textArr[i], '\u1F65'));
         }
-        return Arrays.toString(encryptedArr);
+
+        return builder.toString();
     }
 
     @Override

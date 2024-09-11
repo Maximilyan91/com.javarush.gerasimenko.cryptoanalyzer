@@ -1,5 +1,6 @@
 package service.impl;
 
+import exception.IllegalLanguageException;
 import model.Languages;
 import service.ConsoleService;
 import service.FileService;
@@ -33,16 +34,17 @@ public class ConsoleServiceImpl implements ConsoleService {
                 1 - RUS.
                 2 - ENG""");
 
-        Languages lang = null;
-
         while (scanner.hasNextInt()) {
-            switch (scanner.nextInt()) {
-                case 1 -> lang = Languages.RUS;
-                case 2 -> lang = Languages.ENG;
-                default -> {
-                }
+            int choice = scanner.nextInt();
+
+            if (choice == 1) {
+                return Languages.RUS;
+            } else if (choice == 2) {
+                return Languages.ENG;
+            } else {
+                System.out.println("введите 1 или 2");
             }
         }
-        return lang;
+        return null;
     }
 }

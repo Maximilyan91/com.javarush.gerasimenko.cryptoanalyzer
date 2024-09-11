@@ -24,10 +24,10 @@ public class ConsoleMenu {
             if (scanner.hasNextInt()) {
                 switch (scanner.nextInt()) {
                     case 1 -> {
-                        Languages lang = consoleService.requestLang();
                         String text = consoleService.requestFile();
+                        Languages lang = consoleService.requestLang();
                         int key = consoleService.requestKey();
-                        cryptographer.encrypt(lang, text, key);
+                        System.out.println(cryptographer.encrypt(lang, text, key));
                     }
                     case 0 -> isOpenApp = false;
                 }
