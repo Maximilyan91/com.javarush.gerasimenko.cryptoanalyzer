@@ -21,13 +21,11 @@ public class CryptographerImpl implements Cryptographer {
         Map<Character, Character> encryptionMap = CryptoUtils.getEncryptMap(lang, shift);
         StringBuilder builder = new StringBuilder();
 
-        for (int i = 0; i < textArr.length; i++) {
-            builder.append(encryptionMap.getOrDefault(textArr[i], '\u1F65'));
+        for (char c : textArr) {
+            builder.append(encryptionMap.getOrDefault(c, 'ὥ'));
         }
-
         return builder.toString();
     }
-
     @Override
     public String decrypt(Languages lang, String text, int shift) {
         return encrypt(lang, text, -shift);

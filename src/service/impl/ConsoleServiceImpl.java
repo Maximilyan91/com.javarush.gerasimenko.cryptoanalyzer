@@ -1,22 +1,54 @@
 package service.impl;
 
-import exception.IllegalLanguageException;
 import model.Languages;
 import service.ConsoleService;
+import service.Cryptographer;
 import service.FileService;
+import service.Validator;
 
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class ConsoleServiceImpl implements ConsoleService {
 
+    public static final Cryptographer cryptographer = new CryptographerImpl();
     private static final FileService fileService = new FileServiceImpl();
+    private static final Validator validator = new ValidatorImpl();
     private static final Scanner scanner = new Scanner(System.in);
 
     @Override
-    public String requestFile() {
-        System.out.println("Укажите путь к текстовому файлу для шифровки:");
+    public void printGreeting() {
+        System.out.println("\033[33mAve coder!\033[0m");
+    }
 
-        return fileService.readFile(scanner.nextLine());
+    @Override
+    public void printMainMenu() {
+        System.out.println("""
+                Введи цифру желаемого действия:
+                1 - Зашифровать текст.
+                2 - Дешифровать текст.
+                3 - Дешифровать текст перебором всех значений
+                0 - Выход.""");
+    }
+
+    @Override
+    public String requestFile() {
+        boolean isExistFile = false;
+        Path path = null;
+        while (!isExistFile) {
+            System.out.println("Укажите путь к текстовому файлу для шифровки:");
+
+            path = Path.of(scanner.nextLine());
+
+            isExistFile = validator.isValidPath(path);
+
+            if (!isExistFile) {
+                System.out.println("Файла по пути:\n" + path +
+                        " не существует.");
+            }
+
+        }
+        return fileService.getStringFromFile(path);
     }
 
     @Override
@@ -47,4 +79,11 @@ public class ConsoleServiceImpl implements ConsoleService {
         }
         return null;
     }
+@Override
+    public void inputEncrypt() {
+        String text = requestFile();
+        int key = requestKey();
+        Languages languages = requestLang();
+    System.out.println(cryptographer.encrypt(languages, text, key));
+}
 }
