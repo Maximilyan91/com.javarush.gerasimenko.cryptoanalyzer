@@ -12,6 +12,7 @@ import java.util.Scanner;
 public class ConsoleServiceImpl implements ConsoleService {
 
     public static final Cryptographer cryptographer = new CryptographerImpl();
+    public static final Languages DEFAULT_ENCRYPT_LANGUAGE = Languages.RUS;
     private static final FileService fileService = new FileServiceImpl();
     private static final Validator validator = new ValidatorImpl();
     private static final Scanner scanner = new Scanner(System.in);
@@ -32,15 +33,36 @@ public class ConsoleServiceImpl implements ConsoleService {
     }
 
     @Override
-    public String requestFile() {
+    public void inputEncrypt() {
+        String text = requestFile();
+        int key = requestKey();
+        Languages languages = requestLang();
+
+        String encryptedText = cryptographer.encrypt(languages, text, key);
+        System.out.println("Зашифрованный текст:\n" + encryptedText);
+
+        if (validator.isValidEncrypt(text, encryptedText)) {
+            saveEncryptedText(encryptedText);
+        } else {
+            System.out.println("Шифровка выполнена некорректно. Попробуйте снова");
+        }
+    }
+
+    private String requestFile() {
         boolean isExistFile = false;
         Path path = null;
         while (!isExistFile) {
+
             System.out.println("Укажите путь к текстовому файлу для шифровки:");
 
-            path = Path.of(scanner.nextLine());
+            String s = scanner.nextLine();
 
-            isExistFile = validator.isValidPath(path);
+            if (s.isEmpty()) {
+                break;
+            }
+
+            path = Path.of(s);
+            isExistFile = validator.isValidFIle(path);
 
             if (!isExistFile) {
                 System.out.println("Файла по пути:\n" + path +
@@ -51,39 +73,54 @@ public class ConsoleServiceImpl implements ConsoleService {
         return fileService.getStringFromFile(path);
     }
 
-    @Override
-    public int requestKey() {
-        System.out.println("Укажите ключ:");
-        int key = scanner.nextInt();
-        return key;
+    private int requestKey() {
+        System.out.println("Укажите сдвиг:");
 
+        while (true) {
+            if (scanner.hasNextInt()) {
+                return scanner.nextInt();
+            } else {
+                scanner.next();
+                System.out.println("sdsadas");
+            }
+        }
     }
 
-    @Override
-    public Languages requestLang() {
+    private Languages requestLang() {
         System.out.println("""
                 Укажите язык текста:
-                1 - RUS.
+                1 - RUS
                 2 - ENG""");
+
 
         while (scanner.hasNextInt()) {
             int choice = scanner.nextInt();
 
             if (choice == 1) {
-                return Languages.RUS;
-            } else if (choice == 2) {
+                break;
+            }
+
+            if (choice == 2) {
                 return Languages.ENG;
-            } else {
-                System.out.println("введите 1 или 2");
             }
         }
-        return null;
+        return DEFAULT_ENCRYPT_LANGUAGE;
     }
-@Override
-    public void inputEncrypt() {
-        String text = requestFile();
-        int key = requestKey();
-        Languages languages = requestLang();
-    System.out.println(cryptographer.encrypt(languages, text, key));
+
+    private void saveEncryptedText(String text) {
+        System.out.println("Укажите путь для сохранения файла" +
+                " с результатом шифровки: ");
+
+        Scanner sc = new Scanner(System.in);
+        Path path = Path.of(sc.nextLine());
+
+        try {
+            fileService.writeFile(path, text);
+
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
-}
+
+

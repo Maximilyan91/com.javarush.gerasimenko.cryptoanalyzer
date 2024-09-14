@@ -6,5 +6,5 @@ public interface FileService {
 
     String getStringFromFile(Path path);
 
-    void writeFile(String pathName, String text);
+    void writeFile(Path path, String text);
 }

@@ -24,12 +24,16 @@ public class ValidatorImpl implements Validator {
     }
 
     @Override
-    public boolean isValidPath(Path path) {
-        return !Files.isDirectory(path) && Files.exists(path);
+    public boolean isValidFIle(Path path) {
+        return Files.isRegularFile(path);
     }
 
     @Override
-    public boolean isValidEncrypt(String encryptedString) {
-        return encryptedString.contains("ὥ");
+    public boolean isValidEncrypt(String original, String encrypted) {
+        if (original.length() == encrypted.length()) {
+            return !encrypted.contains("ὥ");
+        } else {
+            return false;
+        }
     }
 }

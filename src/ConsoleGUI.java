@@ -1,22 +1,18 @@
 import service.ConsoleService;
-import service.Cryptographer;
 import service.impl.ConsoleServiceImpl;
-import service.impl.CryptographerImpl;
 
 import java.util.Scanner;
 
 public class ConsoleGUI {
 
     private static final ConsoleService service = new ConsoleServiceImpl();
-    private static final Cryptographer cryptographer = new CryptographerImpl();
-
 
     public static void mainMenu() {
         service.printGreeting();
- //       service.printMainMenu();
-        Scanner scanner = new Scanner(System.in);
         boolean isOpenApp = true;
+
         while (isOpenApp) {
+            Scanner scanner = new Scanner(System.in);
             service.printMainMenu();
             if (scanner.hasNextInt()) {
                 switch (scanner.nextInt()) {

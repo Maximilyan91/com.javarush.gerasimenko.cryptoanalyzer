@@ -10,7 +10,7 @@ public interface Validator {
 
     boolean isValidString(String s);
 
-    boolean isValidPath(Path path);
+    boolean isValidFIle(Path path);
 
-    boolean isValidEncrypt(String encryptedString);
+    boolean isValidEncrypt(String text, String encrypted);
 }
