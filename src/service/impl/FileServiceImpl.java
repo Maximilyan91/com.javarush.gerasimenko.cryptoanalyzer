@@ -9,9 +9,9 @@ import java.nio.file.Path;
 
 public class FileServiceImpl implements FileService {
 
-    public static final String DEFAULT_DIRECTORY = "resources";
-    public static final String DEFAULT_FILENAME = "encrypted.txt";
-    private static final Validator validator = new ValidatorImpl();
+    private static final String DEFAULT_DIRECTORY = "resources";
+    private static final String DEFAULT_FILENAME = "encrypted.txt";
+    private static final Validator VALIDATOR = new ValidatorImpl();
 
     @Override
     public String getStringFromFile(Path path) {
@@ -22,7 +22,7 @@ public class FileServiceImpl implements FileService {
             throw new RuntimeException(e + " - Неудачная попытка чтения файла");
         }
 
-        if (!validator.isValidString(text)) {
+        if (!VALIDATOR.isValidString(text)) {
             throw new IllegalArgumentException(text);
         } else {
             return text;

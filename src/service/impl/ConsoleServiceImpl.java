@@ -12,8 +12,8 @@ import java.util.Scanner;
 
 public class ConsoleServiceImpl implements ConsoleService {
 
-    public static final Cryptographer cryptographer = new CryptographerImpl();
-    public static final Languages DEFAULT_ENCRYPT_LANGUAGE = Languages.RUS;
+    private static final Cryptographer cryptographer = new CryptographerImpl();
+    private static final Languages DEFAULT_ENCRYPT_LANGUAGE = Languages.RUS;
     private static final FileService fileService = new FileServiceImpl();
     private static final Validator validator = new ValidatorImpl();
     private static final Scanner scanner = new Scanner(System.in);
@@ -91,7 +91,7 @@ public class ConsoleServiceImpl implements ConsoleService {
         }
     }
 
-    private String getFileContent() {
+    public String getFileContent() {
         boolean isExistFile = false;
         Path path = null;
         while (!isExistFile) {
@@ -111,7 +111,7 @@ public class ConsoleServiceImpl implements ConsoleService {
         return fileService.getStringFromFile(path);
     }
 
-    private int getKey() {
+    public int getKey() {
         System.out.println("Укажите сдвиг:");
 
         while (true) {
@@ -124,7 +124,7 @@ public class ConsoleServiceImpl implements ConsoleService {
         }
     }
 
-    private Languages getLang() {
+    public Languages getLang() {
         System.out.println("""
                 Укажите язык текста:
                 1 - RUS
