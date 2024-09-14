@@ -5,5 +5,9 @@ public interface ConsoleService {
 
     void printMainMenu();
 
-    void inputEncrypt();
+    void enterEncrypt();
+
+    void enterDecrypt();
+
+    void enterBruteForce();
 }

@@ -9,9 +9,9 @@ import java.nio.file.Path;
 
 public class FileServiceImpl implements FileService {
 
-   private static final Validator validator = new ValidatorImpl();
     public static final String DEFAULT_DIRECTORY = "resources";
     public static final String DEFAULT_FILENAME = "encrypted.txt";
+    private static final Validator validator = new ValidatorImpl();
 
     @Override
     public String getStringFromFile(Path path) {
@@ -32,21 +32,20 @@ public class FileServiceImpl implements FileService {
     @Override
     public void writeFile(Path path, String text) {
         try {
-            if (Files.exists(path)) {
+            if (Files.isRegularFile(path)) {
                 Files.writeString(path, text);
-            }
 
-            if (Files.isDirectory(path)) {
+            }else if (Files.isDirectory(path)) {
+
                 Path file = Files.createFile(path.resolve(DEFAULT_FILENAME));
                 Files.writeString(file, text);
-            }
-            if (Files.notExists(path)) {
-                Path file = Files.createFile(Path.of(DEFAULT_DIRECTORY, path.toString()));
-                Files.writeString(file, text);
-            } else {
-                Files.writeString(Path.of(DEFAULT_DIRECTORY, DEFAULT_FILENAME), text);
-            }
 
+            } else {
+                Path file = Path.of(DEFAULT_DIRECTORY, DEFAULT_FILENAME);
+                Files.writeString(file, text);
+                System.out.println("Путь к файлу указан неправильно.\n" +
+                        "Результат сохранен в дефолтную папку");
+            }
         } catch (IOException e) {
             throw new RuntimeException("Неудачная попытка записи файла");
         }

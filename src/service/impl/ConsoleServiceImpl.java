@@ -7,6 +7,7 @@ import service.FileService;
 import service.Validator;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleServiceImpl implements ConsoleService {
@@ -33,33 +34,71 @@ public class ConsoleServiceImpl implements ConsoleService {
     }
 
     @Override
-    public void inputEncrypt() {
-        String text = requestFile();
-        int key = requestKey();
-        Languages languages = requestLang();
+    public void enterEncrypt() {
+        String text = getFileContent();
+        int key = getKey();
+        Languages languages = getLang();
 
         String encryptedText = cryptographer.encrypt(languages, text, key);
         System.out.println("Зашифрованный текст:\n" + encryptedText);
 
         if (validator.isValidEncrypt(text, encryptedText)) {
-            saveEncryptedText(encryptedText);
+            saveText(encryptedText);
         } else {
             System.out.println("Шифровка выполнена некорректно. Попробуйте снова");
         }
     }
 
-    private String requestFile() {
+    @Override
+    public void enterDecrypt() {
+        String text = getFileContent();
+        int key = getKey();
+        Languages languages = getLang();
+
+        String decrypted = cryptographer.decrypt(languages, text, key);
+
+        System.out.println("Дешифрованный текст:\n" + decrypted);
+
+        if (validator.isValidEncrypt(text, decrypted)) {
+            saveText(decrypted);
+        } else {
+            System.out.println("Дешифровка выполнена некорректно. Попробуйте снова");
+        }
+    }
+
+    @Override
+    public void enterBruteForce() {
+        Languages lang = getLang();
+        String encrypted = getFileContent();
+        String encSubString = getSubString(encrypted);
+
+        List<String> results = cryptographer.bruteForce(lang, encSubString);
+        for (int i = 0; i < results.size(); i++) {
+            System.out.println((i + 1) + " - " + results.get(i) + "\n ------------------------------");
+        }
+
+        System.out.println("Выберите правильный вариант дешифровки и введите его номер:");
+        int key = scanner.nextInt();
+
+        String decrypted = cryptographer.decrypt(lang, encrypted, key);
+
+        System.out.println("Дешифрованный текст:\n" + decrypted);
+
+        if (validator.isValidEncrypt(encrypted, decrypted)) {
+            saveText(decrypted);
+        } else {
+            System.out.println("Дешифровка выполнена некорректно. Попробуйте снова");
+        }
+    }
+
+    private String getFileContent() {
         boolean isExistFile = false;
         Path path = null;
         while (!isExistFile) {
 
-            System.out.println("Укажите путь к текстовому файлу для шифровки:");
-
-            String s = scanner.nextLine();
-
-            if (s.isEmpty()) {
-                break;
-            }
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Укажите путь к исходному текстовому файлу:");
+            String s = sc.nextLine();
 
             path = Path.of(s);
             isExistFile = validator.isValidFIle(path);
@@ -68,12 +107,11 @@ public class ConsoleServiceImpl implements ConsoleService {
                 System.out.println("Файла по пути:\n" + path +
                         " не существует.");
             }
-
         }
         return fileService.getStringFromFile(path);
     }
 
-    private int requestKey() {
+    private int getKey() {
         System.out.println("Укажите сдвиг:");
 
         while (true) {
@@ -81,12 +119,12 @@ public class ConsoleServiceImpl implements ConsoleService {
                 return scanner.nextInt();
             } else {
                 scanner.next();
-                System.out.println("sdsadas");
+                System.out.println("Введите число не равное 0 и не кратное количеству символов в языке");
             }
         }
     }
 
-    private Languages requestLang() {
+    private Languages getLang() {
         System.out.println("""
                 Укажите язык текста:
                 1 - RUS
@@ -107,9 +145,9 @@ public class ConsoleServiceImpl implements ConsoleService {
         return DEFAULT_ENCRYPT_LANGUAGE;
     }
 
-    private void saveEncryptedText(String text) {
+    private void saveText(String text) {
         System.out.println("Укажите путь для сохранения файла" +
-                " с результатом шифровки: ");
+                " с результатом: ");
 
         Scanner sc = new Scanner(System.in);
         Path path = Path.of(sc.nextLine());
@@ -119,6 +157,17 @@ public class ConsoleServiceImpl implements ConsoleService {
 
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private String getSubString(String text) {
+        System.out.println("Укажите количество первых символов текста для перебора:");
+        int count = scanner.nextInt();
+
+        if (count < text.length()) {
+            return String.copyValueOf(text.toCharArray(), 0, count);
+        } else {
+            return text;
         }
     }
 }

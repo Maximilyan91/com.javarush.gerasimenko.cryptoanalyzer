@@ -14,15 +14,16 @@ public class ConsoleGUI {
         while (isOpenApp) {
             Scanner scanner = new Scanner(System.in);
             service.printMainMenu();
+
             if (scanner.hasNextInt()) {
+
                 switch (scanner.nextInt()) {
-                    case 1 -> service.inputEncrypt();
-                    //TODO записать шифр в файл
-                    case 2 -> {
-                        //TODO заняться дешифровкой
-                    }
+                    case 1 -> service.enterEncrypt();
+                    case 2 -> service.enterDecrypt();
+                    case 3 -> service.enterBruteForce();
                     case 0 -> isOpenApp = false;
                 }
+
             } else {
                 scanner.next();
                 service.printMainMenu();
