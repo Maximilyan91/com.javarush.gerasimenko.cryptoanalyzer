@@ -31,21 +31,26 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void writeFile(Path path, String text) {
+
         try {
             if (Files.isRegularFile(path)) {
                 Files.writeString(path, text);
-
-            }else if (Files.isDirectory(path)) {
-
-                Path file = Files.createFile(path.resolve(DEFAULT_FILENAME));
-                Files.writeString(file, text);
-
-            } else {
-                Path file = Path.of(DEFAULT_DIRECTORY, DEFAULT_FILENAME);
-                Files.writeString(file, text);
-                System.out.println("Путь к файлу указан неправильно.\n" +
-                        "Результат сохранен в дефолтную папку");
+                System.out.println("Файл по пути:\n" + path + "\nУспешно записан!");
             }
+
+            if (Files.isDirectory(path)) {
+                path = path.resolve(DEFAULT_FILENAME);
+                Files.writeString(path, text);
+                System.out.println("Файл по пути:\n" + path + "\nУспешно записан!");
+            }
+
+            if (Files.notExists(path)) {
+                Path defaultPath = Path.of(DEFAULT_DIRECTORY).resolve(DEFAULT_FILENAME);
+                Files.writeString(defaultPath, text);
+                System.out.println("Указанного пути не существует. Файл записан по пути:\n"+ defaultPath);
+            }
+
+
         } catch (IOException e) {
             throw new RuntimeException("Неудачная попытка записи файла");
         }
